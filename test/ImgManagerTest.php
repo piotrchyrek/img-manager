@@ -1,29 +1,73 @@
 <?php
-
 use \Chyr\ImgManager;
 
 class ImgManagerTest extends PHPUnit_Framework_TestCase 
 {
-    public $obj; 
-    public $path;
+    public $obj;
+
+    public $dir;
+    public $dirOut;
+
 
     protected function setUp()
     {
-        $this->path = 'test/in/1.jpg';
-        $this->obj = new ImgManager($this->path);
+        $this->dir = 'test/in/';
+        $this->dirOut = 'test/out/';
+
+        $this->obj = new ImgManager($this->dir.'1.jpg');
+
+        $this->prepareOutDirectory();
     }
 
-
-    public function testConstructor()
+    private function prepareOutDirectory()
     {
-        $this->assertEquals($this->obj->path, $this->path);
+        $this->clearDir($this->dirOut);
+        mkdir($this->dirOut);
+    }
+
+    private function clearDir($path)
+    {
+        if (is_dir($path)) {
+
+            $amountOfFiles = iterator_count(new FilesystemIterator($path, FilesystemIterator::SKIP_DOTS));
+
+            if ($amountOfFiles > 0) {
+                array_map('unlink', glob("$path/*.*"));
+            }
+
+            rmdir($path);
+        }
     }
 
 
-    public function testImageData()
-    {       
-        $this->assertEquals($this->obj->width, 4160);
-        $this->assertEquals($this->obj->height, 2340);
+
+    protected static function getMethod($name) 
+    {
+        $class = new ReflectionClass('MyClass');
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
+        return $method;
+    }
+
+
+    public function testWidthAndHeightOfJPG() 
+    {
+        $this->assertEquals($this->obj->getWidth(), 1500);
+        $this->assertEquals($this->obj->getHeight(), 844);
+    }
+
+    public function testWidthAndHeightOfPNG() 
+    {
+        $obj = new ImgManager($this->dir.'2.png');
+        $this->assertEquals($obj->getWidth(), 814);
+        $this->assertEquals($obj->getHeight(), 392);
+    }
+
+    public function testWidthAndHeightOfGIF() 
+    {
+        $obj = new ImgManager($this->dir.'3.gif');
+        $this->assertEquals($obj->getWidth(), 600);
+        $this->assertEquals($obj->getHeight(), 1067);
     }
 }
 

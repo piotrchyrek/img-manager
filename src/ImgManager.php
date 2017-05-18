@@ -3,23 +3,61 @@ namespace Chyr;
 
 class ImgManager 
 {
-	public $path;
+    private $width;
+    private $height;
 
-	public $width;
-	public $height;
-	public $format;
+    private $format;
+    private $image;
 
 
-	function __construct($path) 
-	{
-		$this->path = $path;
-		
-		$this->getImageInfo();
-	}
+    public function __construct($path = false) 
+    {
+        if ($path !== false) {
+            $this->openImage($path);
+        }     
+    }
 
-	public function getImageInfo()
-	{
-		list ($this->width, $this->height, $this->format) = getimagesize($this->path);
-	}
+
+    public function openImage($path)
+    {
+        if ($this->getImageInfo($path)) {
+            $this->getImageToMemory($path);
+        }
+    }
+
+
+    private function getImageInfo($path)
+    {
+        $imgInfo = getimagesize($path);
+
+        if ($imgInfo !== false) {
+            $this->width = $imgInfo[0];
+            $this->height = $imgInfo[1];
+            $this->format = $imgInfo[2];
+
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private function getImageToMemory($path)
+    {
+
+    }
+
+
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+
+    public function getHeight()
+    {
+        return $this->height;
+    }
 
 }
+    
