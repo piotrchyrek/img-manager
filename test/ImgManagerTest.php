@@ -1,22 +1,22 @@
 <?php
 
-use \Chyr\Image\ImgManager;
+use \Chyr\ImgManager;
 
 class ImgManagerTest extends PHPUnit_Framework_TestCase 
 {
 	public $obj; 
-	public $dir;
+	public $path;
 
 	protected function setUp()
-    {
-    	$this->dir = 'test/in/1.jpg';
-		$this->obj = new ImgManager($this->dir);
-    }
+	{
+		$this->path = 'test/in/1.jpg';
+		$this->obj = new ImgManager($this->path);
+	}
 
 
 	public function testConstructor()
 	{
-		$this->assertEquals($this->obj->dir, $this->dir);
+		$this->assertEquals($this->obj->path, $this->path);
 	}
 
 

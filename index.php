@@ -1,7 +1,7 @@
 <?php
-	use \Chyr\Image\ImgManager;
+	use \Chyr\ImgManager;
 
-	require_once __DIR__ . '/vendor/autoload.php';
+	require_once('./vendor/autoload.php');
 	
-	new ImgManager();
+	new ImgManager('test/in/1.jpg');
 ?>
