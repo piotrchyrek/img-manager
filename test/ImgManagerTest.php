@@ -3,7 +3,9 @@ use \Chyr\ImgManager;
 
 class ImgManagerTest extends PHPUnit_Framework_TestCase 
 {
-    public $obj;
+    public $jpg;
+    public $gif;
+    public $png;
 
     public $dir;
     public $dirOut;
@@ -14,7 +16,9 @@ class ImgManagerTest extends PHPUnit_Framework_TestCase
         $this->dir = 'test/in/';
         $this->dirOut = 'test/out/';
 
-        $this->obj = new ImgManager($this->dir.'1.jpg');
+        $this->jpg = new ImgManager($this->dir.'1.jpg');
+        $this->png = new ImgManager($this->dir.'2.png');
+        $this->gif = new ImgManager($this->dir.'3.gif');
 
         $this->prepareOutDirectory();
     }
@@ -40,34 +44,43 @@ class ImgManagerTest extends PHPUnit_Framework_TestCase
     }
 
 
-
-    protected static function getMethod($name) 
-    {
-        $class = new ReflectionClass('MyClass');
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-        return $method;
+    public function getPrivateProperty($propertyName) {
+        $reflector = new ReflectionClass('\Chyr\ImgManager');
+        $property = $reflector->getProperty( $propertyName );
+        $property->setAccessible( true );
+ 
+        return $property;
     }
 
 
     public function testWidthAndHeightOfJPG() 
     {
-        $this->assertEquals($this->obj->getWidth(), 1500);
-        $this->assertEquals($this->obj->getHeight(), 844);
+        $this->assertEquals($this->jpg->getWidth(), 1500);
+        $this->assertEquals($this->jpg->getHeight(), 844);
     }
 
     public function testWidthAndHeightOfPNG() 
     {
-        $obj = new ImgManager($this->dir.'2.png');
-        $this->assertEquals($obj->getWidth(), 814);
-        $this->assertEquals($obj->getHeight(), 392);
+        
+        $this->assertEquals($this->png->getWidth(), 814);
+        $this->assertEquals($this->png->getHeight(), 392);
     }
 
     public function testWidthAndHeightOfGIF() 
     {
-        $obj = new ImgManager($this->dir.'3.gif');
-        $this->assertEquals($obj->getWidth(), 600);
-        $this->assertEquals($obj->getHeight(), 1067);
+        
+        $this->assertEquals($this->gif->getWidth(), 600);
+        $this->assertEquals($this->gif->getHeight(), 1067);
+    }
+
+
+    public function testFormats()
+    {
+        $property = $this->getPrivateProperty('format');
+
+        $this->assertEquals($property->getValue($this->jpg), IMAGETYPE_JPEG);
+        $this->assertEquals($property->getValue($this->gif), IMAGETYPE_GIF);
+        $this->assertEquals($property->getValue($this->png), IMAGETYPE_PNG);
     }
 }
 
