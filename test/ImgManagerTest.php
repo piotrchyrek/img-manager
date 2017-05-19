@@ -82,5 +82,31 @@ class ImgManagerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($property->getValue($this->gif), IMAGETYPE_GIF);
         $this->assertEquals($property->getValue($this->png), IMAGETYPE_PNG);
     }
+
+
+    public function testIfImageIsSuccesfullyLoadedToMemory()
+    {
+        $property = $this->getPrivateProperty('image');
+
+        $this->assertFalse(!$property->getValue($this->jpg));
+        $this->assertFalse(!$property->getValue($this->gif));
+        $this->assertFalse(!$property->getValue($this->png));
+    }
+
+
+    public function testIfImageWasSaved()
+    {
+        $newFile = $this->dirOut.'1.jpg';
+        $this->jpg->save($newFile);
+        $this->assertTrue(file_exists($newFile));
+
+        $newFile = $this->dirOut.'2.png';
+        $this->png->save($newFile);
+        $this->assertTrue(file_exists($newFile));
+
+        $newFile = $this->dirOut.'3.gif';
+        $this->gif->save($newFile);
+        $this->assertTrue(file_exists($newFile));
+    }
 }
 

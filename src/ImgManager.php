@@ -44,7 +44,48 @@ class ImgManager
 
     private function getImageToMemory($path)
     {
+        switch ($this->format) 
+        {
+            case IMAGETYPE_JPEG:
+                $this->image = imagecreatefromjpeg($path);
+                break;
 
+            case IMAGETYPE_GIF:
+                $this->image = imagecreatefromgif($path);
+                break;
+            
+            case IMAGETYPE_PNG:          
+                $this->image = imagecreatefrompng($path);
+                break;
+
+            default:
+                throw new InvalidArgumentException("Unsupported format");
+        }
+    }
+
+    public function save($name, $compression = 100)
+    {
+        switch ($this->format) 
+        {
+            case IMAGETYPE_JPEG:
+                $result = imagejpeg($this->image, $name, $compression);
+                break;
+
+            case IMAGETYPE_GIF:
+                $result = imagegif($this->image, $name);
+                break;
+            
+            case IMAGETYPE_PNG:          
+                $result = imagepng($this->image, $name);
+                break;
+
+            default:
+                throw new InvalidArgumentException("Unsupported format");
+        }
+
+        if (!$result) {
+            throw new RuntimeException;
+        }
     }
 
 
